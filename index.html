@@ -1,0 +1,614 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#F6F2EC">
+<title>The Nano Month</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js')</script>
+<style>
+:root{
+  --paper:#F6F2EC; --card:#FBF8F4; --ink:#1E1B18; --muted:#857C73; --line:rgba(30,27,24,.1);
+  --serif:"Instrument Serif","Iowan Old Style",Georgia,serif;
+  --sans:"Inter",-apple-system,system-ui,sans-serif;
+  --ease:cubic-bezier(.2,.7,.2,1);
+  --gold:#D8B67C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;overflow-x:hidden}
+html,body{max-width:100%;overflow-x:clip}
+body{background:var(--paper);color:var(--ink);font:400 15px/1.55 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden;animation:pagein .9s var(--ease) both}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;opacity:.5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .4 0 0 0 0 .35 0 0 0 0 .3 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+@keyframes pagein{from{opacity:0}to{opacity:1}}
+
+.wrap{max-width:600px;margin-left:auto;margin-right:auto;padding-left:24px;padding-right:24px}
+.eyebrow{font:500 11px/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.serif{font-family:var(--serif);font-weight:400}
+section{padding-top:72px;padding-bottom:72px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:28px}
+.sec-head .eyebrow{flex:none}
+.sec-head h2{font:400 34px/1 var(--serif);letter-spacing:-.01em}
+.sec-head::after{content:"";flex:1;height:1px;background:var(--line);transform:translateY(-6px)}
+
+/* reveal */
+.js .reveal{opacity:0;transform:translateY(16px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.js .reveal.in{opacity:1;transform:none}
+
+/* ---------- hero ---------- */
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding-top:64px;padding-bottom:40px}
+.hero h1{font:400 clamp(60px,19vw,128px)/.86 var(--serif);text-transform:uppercase;letter-spacing:-.02em;margin:22px 0 26px}
+.hero h1 em{font-style:italic;text-transform:none;letter-spacing:-.01em}
+.dates{font:500 13px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase}
+.dates span{color:var(--muted);padding:0 6px}
+.lede{font:italic 400 22px/1.3 var(--serif);color:#4A433D;margin-top:18px;max-width:22ch}
+
+.now{margin-top:44px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 18px 16px;box-shadow:0 1px 0 rgba(255,255,255,.7) inset,0 10px 30px -18px rgba(60,40,20,.25);border-left:3px solid var(--accent,var(--ink))}
+.now .eyebrow{display:flex;align-items:center;gap:8px}
+.now .eyebrow i{width:6px;height:6px;border-radius:50%;background:var(--accent,var(--ink));animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.25}}
+.now h3{font:400 26px/1.1 var(--serif);margin:10px 0 4px}
+.now .tag{font:italic 16px/1.3 var(--serif);color:var(--muted)}
+.now dl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin-top:14px;padding-top:14px;border-top:1px dashed var(--line);font-size:14px}
+.now dt{color:var(--muted);font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding-top:2px}
+
+.road{margin-top:22px}
+.road-bar{position:relative;display:flex;gap:3px;height:6px}
+.road-bar span{border-radius:3px;opacity:.85}
+.road-bar .pin{position:absolute;top:50%;width:14px;height:14px;border-radius:50%;background:var(--paper);border:2px solid var(--ink);transform:translate(-50%,-50%);transition:left 1.2s var(--ease)}
+.road-labels{display:flex;gap:3px;margin-top:8px;font:500 10px/1 var(--sans);letter-spacing:.12em;color:var(--muted)}
+.scroll-cue{margin-top:40px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);text-decoration:none}
+.scroll-cue::after{content:" ↓";display:inline-block;animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(3px)}}
+
+/* ---------- rhythm ---------- */
+.rhythm{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 16px 16px;cursor:default;transition:transform .5s var(--ease),box-shadow .5s var(--ease);-webkit-tap-highlight-color:transparent}
+.tile:hover,.tile.play{transform:translateY(-3px);box-shadow:0 14px 30px -20px rgba(60,40,20,.35)}
+.tile .ico{font-size:30px;line-height:1;display:inline-block;transform-origin:50% 90%}
+.tile .day{margin-top:18px}
+.tile h3{font:400 23px/1.1 var(--serif);margin-top:6px}
+.tile p{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.45}
+.free-note{margin-top:18px;text-align:center;font:italic 18px/1.3 var(--serif);color:var(--muted)}
+.free-note b{font:500 11px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--ink);font-style:normal;margin-right:6px}
+
+/* icon micro-motion */
+@keyframes sway{0%,100%{transform:rotate(0)}30%{transform:rotate(-9deg)}65%{transform:rotate(6deg)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px) rotate(-4deg)}}
+@keyframes wiggle{0%,100%{transform:scale(1)}25%{transform:scale(1.08) rotate(-6deg)}50%{transform:scale(1.04) rotate(5deg)}75%{transform:scale(1.06) rotate(-2deg)}}
+@keyframes clap{0%,100%{transform:rotate(0)}40%{transform:rotate(-12deg)}60%{transform:rotate(2deg)}}
+:is(.tile:hover,.tile.play,.plan li:hover) .ico[data-k=flower]{animation:sway 1.1s var(--ease)}
+:is(.tile:hover,.tile.play,.plan li:hover) .ico[data-k=letter]{animation:float 1.1s var(--ease)}
+:is(.tile:hover,.tile.play,.plan li:hover) .ico[data-k=gift]{animation:wiggle .9s var(--ease)}
+:is(.tile:hover,.tile.play,.plan li:hover) .ico[data-k=movie]{animation:clap .8s var(--ease)}
+
+/* ---------- weeks ---------- */
+.weeks{display:grid;gap:14px}
+.week{background:var(--card);border:1px solid var(--line);border-radius:22px;overflow:hidden;position:relative;transition:box-shadow .5s var(--ease)}
+.week::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:var(--accent)}
+.week.open{box-shadow:0 18px 40px -26px rgba(60,40,20,.4)}
+.week.past{opacity:.72}
+.week-head{all:unset;display:block;width:100%;box-sizing:border-box;padding:24px 20px 22px;cursor:pointer;-webkit-tap-highlight-color:transparent;background:linear-gradient(180deg,var(--tint),transparent 85%)}
+.week-head:focus-visible{outline:2px solid var(--accent);outline-offset:-4px;border-radius:22px}
+.wk-top{display:flex;justify-content:space-between;align-items:center}
+.wk-num{font:400 44px/1 var(--serif);color:var(--accent)}
+.wk-range{font:500 11px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.wk-badge{display:inline-block;margin-left:8px;padding:4px 8px;border-radius:99px;background:var(--accent);color:#fff;font:600 9px/1 var(--sans);letter-spacing:.14em;vertical-align:middle}
+.week h3{font:400 32px/1.05 var(--serif);text-transform:uppercase;letter-spacing:.01em;margin-top:18px}
+.week .tag{font:italic 19px/1.3 var(--serif);color:#5A524B;margin-top:4px}
+.wk-foot{display:flex;justify-content:space-between;align-items:center;margin-top:16px}
+.steps{display:flex;gap:5px}
+.steps i{width:18px;height:3px;border-radius:2px;background:var(--line)}
+.steps i.on{background:var(--accent)}
+.chev{width:28px;height:28px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;transition:transform .5s var(--ease),background .3s}
+.chev::before{content:"";width:7px;height:7px;border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);transform:translateY(-2px) rotate(45deg)}
+.week.open .chev{transform:rotate(180deg);background:var(--tint)}
+.week-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .6s var(--ease)}
+.week.open .week-body{grid-template-rows:1fr}
+.week-body>div{overflow:hidden}
+.week-inner{padding:0 20px 22px;opacity:0;transition:opacity .4s ease}
+.week.open .week-inner{opacity:1;transition-delay:.15s}
+
+.strip{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:18px}
+.strip div{text-align:center;padding:8px 0 9px;border-radius:12px;font-size:10px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+.strip b{display:block;font:400 19px/1.1 var(--serif);color:var(--ink);letter-spacing:0;margin:3px 0 2px}
+.strip .e{font-size:13px;height:16px;line-height:16px;letter-spacing:0}
+.strip .key{background:var(--tint)}
+.strip .past{opacity:.45}
+.strip .today{background:var(--accent);color:rgba(255,255,255,.8)}
+.strip .today b{color:#fff}
+
+.plan{list-style:none;border-top:1px solid var(--line)}
+.plan li{display:grid;grid-template-columns:32px 1fr auto;align-items:center;gap:10px;padding:13px 0;border-bottom:1px solid var(--line)}
+.plan .ico{font-size:20px;display:inline-block;transform-origin:50% 90%}
+.plan .d{font:500 11px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.plan .w{font:400 19px/1.2 var(--serif);margin-top:4px}
+.plan .dt{font-size:12px;color:var(--muted);text-align:right;white-space:nowrap}
+.plan li.done .w{color:var(--muted)}
+.plan li.done .dt::before{content:"✓ ";color:var(--accent)}
+.plan li.is-today .dt{color:var(--accent);font-weight:600}
+.wk-free{font:italic 15px/1.4 var(--serif);color:var(--muted);margin-top:14px}
+.wk-toward{margin-top:14px;padding:12px 14px;border-radius:12px;background:var(--tint);font-size:13px;color:#4A433D}
+.wk-toward b{font-weight:600;color:var(--ink)}
+
+/* ---------- finale ---------- */
+.finale{background:#1C1916;color:#EFE7DC;padding:96px 0 110px;margin-top:40px;position:relative;overflow:hidden}
+.finale::before{content:"";position:absolute;left:50%;top:62%;width:520px;height:520px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(216,182,124,.18),transparent 65%);pointer-events:none}
+.finale .eyebrow{color:var(--gold)}
+.finale h2{font:400 clamp(52px,16vw,96px)/.9 var(--serif);text-transform:uppercase;margin:18px 0 44px;letter-spacing:-.01em}
+.finale h2 em{font-style:italic;text-transform:none;color:var(--gold)}
+.fdays{list-style:none;position:relative;padding-left:26px}
+.fdays::before{content:"";position:absolute;left:5px;top:8px;bottom:18px;width:1px;background:linear-gradient(rgba(239,231,220,.15),var(--gold))}
+.fdays li{position:relative;padding:0 0 26px}
+.fdays li::before{content:"";position:absolute;left:-25px;top:6px;width:9px;height:9px;border-radius:50%;border:1px solid rgba(239,231,220,.4);background:#1C1916}
+.fdays .d{font:500 11px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:rgba(239,231,220,.5)}
+.fdays .w{font:italic 22px/1.2 var(--serif);margin-top:6px;color:rgba(239,231,220,.8)}
+.fdays li.big::before{width:15px;height:15px;left:-28px;top:3px;background:var(--gold);border-color:var(--gold);box-shadow:0 0 0 6px rgba(216,182,124,.15);animation:glow 3s ease-in-out infinite}
+@keyframes glow{50%{box-shadow:0 0 0 12px rgba(216,182,124,.05)}}
+.fdays li.big .d{color:var(--gold)}
+.fdays li.big .w{font:400 clamp(44px,13vw,64px)/1 var(--serif);font-style:normal;text-transform:uppercase;color:#FFF8EE;margin-top:10px}
+.fdays li.today .d::after{content:"· today";margin-left:8px;color:var(--gold)}
+.closing{margin-top:40px;font:italic 400 30px/1.2 var(--serif);color:#FFF8EE}
+.count{margin-top:14px;font:500 11px/1.6 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:rgba(239,231,220,.45)}
+footer{background:#1C1916;color:rgba(239,231,220,.3);text-align:center;font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:0 0 40px}
+
+/* ---------- larger screens ---------- */
+@media (min-width:760px){
+  .wrap{max-width:720px}
+  .rhythm{grid-template-columns:repeat(4,1fr)}
+  .weeks{grid-template-columns:1fr 1fr;align-items:start}
+  .week-head{padding:28px 24px 24px}
+  .week-inner{padding:0 24px 24px}
+}
+/* ---------- intro reveal ---------- */
+body.locked{overflow:hidden}
+.intro{position:fixed;inset:0;z-index:60;overflow:hidden;background:#1C1916;color:#EFE7DC;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:opacity 1.3s var(--ease),visibility 0s 1.3s}
+.intro.done{opacity:0;visibility:hidden;pointer-events:none}
+.intro.gone{display:none}
+.intro::before{content:"";position:absolute;left:50%;top:50%;width:140vmax;height:140vmax;transform:translate(-50%,-50%) scale(.4);background:radial-gradient(circle,rgba(216,182,124,.22),transparent 45%);opacity:0;transition:opacity 2s ease,transform 3s var(--ease)}
+.intro.glow::before{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.bars{position:absolute;top:max(16px,env(safe-area-inset-top));left:16px;right:16px;display:flex;gap:4px;z-index:2}
+.bars i{flex:1;height:2px;border-radius:2px;background:rgba(239,231,220,.18);overflow:hidden}
+.bars i::after{content:"";display:block;height:100%;width:0;background:rgba(239,231,220,.85)}
+.bars i.seen::after{width:100%}
+.bars i.cur::after{width:100%;transition:width .5s var(--ease)}
+.skip{all:unset;position:absolute;z-index:2;top:max(30px,calc(env(safe-area-inset-top) + 14px));right:18px;font:500 10px/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:rgba(239,231,220,.45);padding:8px;cursor:pointer}
+.wait{position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px;border-radius:50%;background:var(--gold);animation:pulse 1.2s ease-in-out infinite;transition:opacity .5s}
+.intro.started .wait{opacity:0}
+.scene{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 28px;overflow:hidden;max-width:640px;margin:0 auto;opacity:0;pointer-events:none;transition:opacity .9s var(--ease),transform 1.1s var(--ease)}
+.scene.on{opacity:1;pointer-events:auto}
+.scene.off{opacity:0;transform:translateY(-14px) scale(.985)}
+.scene .w{display:inline-block;opacity:0;filter:blur(10px);transform:translateY(14px);transition:opacity 1.1s var(--ease),filter 1.1s var(--ease),transform 1.1s var(--ease);transition-delay:calc(var(--d,0)*1ms)}
+.scene.on .w{opacity:1;filter:blur(0);transform:none}
+.i-s{font:italic 400 22px/1.3 var(--serif);color:rgba(239,231,220,.65)}
+.i-xl{font:400 clamp(56px,17vw,120px)/.95 var(--serif);margin-top:8px;color:#FFF8EE}
+.i-xxl{font:400 clamp(56px,17vw,130px)/.84 var(--serif);text-transform:uppercase;letter-spacing:-.02em;margin:14px 0 4px;color:#FFF8EE}
+.i-xxl em,.i-xl em{font-style:italic;text-transform:none;color:var(--gold)}
+.i-l{font:400 clamp(34px,10vw,56px)/1.05 var(--serif);margin-top:14px;color:#FFF8EE}
+.i-l .arrow{display:block;height:1px;width:0;background:var(--gold);margin:14px 0;transition:width 1.2s var(--ease) .9s}
+.scene.on .i-l .arrow{width:64px}
+.i-weeks{list-style:none;margin-top:22px}
+.scene .i-weeks li{display:block;padding:12px 0;border-top:1px solid rgba(239,231,220,.12)}
+.i-weeks b{font:400 32px/1 var(--serif);text-transform:uppercase}
+.i-weeks span{display:block;font:italic 17px/1.3 var(--serif);color:rgba(239,231,220,.6);margin-top:4px}
+.i-rh{display:grid;grid-template-columns:1fr 1fr;gap:18px 14px;margin:26px 0}
+.i-rh .w{font:400 22px/1.2 var(--serif);color:#FFF8EE}
+.i-rh .w em{display:block;font:normal 32px/1 var(--sans);margin-bottom:8px}
+.i-rh .w small{display:block;font:500 10px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:rgba(239,231,220,.45);margin-bottom:6px}
+.i-go{all:unset;margin-top:40px;align-self:flex-start;padding:15px 24px;border-radius:99px;border:1px solid var(--gold);color:var(--gold);font:500 12px/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:background .4s,color .4s}
+.i-go:hover,.i-go:active{background:var(--gold);color:#1C1916}
+.tap{position:absolute;bottom:max(26px,env(safe-area-inset-bottom));left:0;right:0;text-align:center;font:500 10px/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:rgba(239,231,220,.3)}
+.gate{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;transition:opacity .9s var(--ease)}
+.gate .eyebrow{color:rgba(239,231,220,.5)}
+.gate b{font:italic 400 34px/1 var(--serif);color:#FFF8EE}
+.gate .ring{width:74px;height:74px;border-radius:50%;border:1px solid rgba(216,182,124,.5);display:grid;place-items:center;animation:glow 2.6s ease-in-out infinite;box-shadow:0 0 0 0 rgba(216,182,124,.2)}
+.gate .ring::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--gold)}
+.intro.started .gate{opacity:0;pointer-events:none}
+.intro:not(.started) .tap,.intro:not(.started) .bars,.intro:not(.started) .skip{opacity:0}
+.stamp{font:500 11px/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-top:22px}
+.music{position:fixed;z-index:55;right:16px;bottom:max(16px,env(safe-area-inset-bottom));width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:rgba(251,248,244,.85);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);display:grid;place-items:center;cursor:pointer;font-size:15px;color:var(--ink);box-shadow:0 8px 20px -12px rgba(60,40,20,.4)}
+.music[hidden]{display:none}
+.music .eq{display:flex;gap:2px;align-items:flex-end;height:14px}
+.music .eq i{width:2px;background:var(--ink);border-radius:1px;height:4px}
+.music.on .eq i{animation:eq 1s ease-in-out infinite}
+.music.on .eq i:nth-child(2){animation-delay:.2s}.music.on .eq i:nth-child(3){animation-delay:.4s}
+@keyframes eq{50%{height:14px}}
+.replay{all:unset;cursor:pointer;color:rgba(239,231,220,.45);border-bottom:1px solid rgba(239,231,220,.2);margin-left:10px}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .js .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<div class="intro" id="intro" hidden>
+  <div class="bars" id="bars"></div>
+  <button class="skip" id="skip">skip</button>
+  <div class="gate"><p class="eyebrow">for Nano</p><span class="ring"></span><b>tap to open</b></div>
+  <div id="scenes"></div>
+  <p class="tap">tap right → next · tap left ← back</p>
+</div>
+
+<header class="hero wrap">
+  <p class="eyebrow reveal">a private guide · 2026</p>
+  <h1 class="reveal">The<br>Nano<br><em>Month</em></h1>
+  <p class="dates reveal">September 26<span>→</span>October 26</p>
+  <p class="lede reveal">A month of celebrating every little thing that makes you, you.</p>
+
+  <div class="now reveal" id="now" aria-live="polite"></div>
+
+  <div class="road reveal" aria-hidden="true">
+    <div class="road-bar" id="road"></div>
+    <div class="road-labels" id="road-labels"></div>
+  </div>
+
+  <a class="scroll-cue reveal" href="#rhythm">The rhythm</a>
+</header>
+
+<audio id="song" src="song.mp3" loop preload="auto" playsinline></audio>
+<button class="music" id="music" aria-label="Play or pause music" hidden><span class="eq"><i></i><i></i><i></i></span></button>
+
+<main>
+  <section id="rhythm" class="wrap">
+    <div class="sec-head reveal"><span class="eyebrow">I</span><h2>The Rhythm</h2></div>
+    <div class="rhythm" id="rhythm-grid"></div>
+    <p class="free-note reveal"><b>Tue · Thu · Sat</b>spontaneous days.</p>
+  </section>
+
+  <section id="weeks" class="wrap">
+    <div class="sec-head reveal"><span class="eyebrow">II</span><h2>The Four Weeks</h2></div>
+    <div class="weeks" id="weeks-grid"></div>
+  </section>
+
+  <section class="finale" id="finale">
+    <div class="wrap">
+      <p class="eyebrow reveal">October 24 → 26</p>
+      <h2 class="reveal">The Nano<br><em>Finale</em></h2>
+      <ol class="fdays" id="fdays"></ol>
+      <p class="closing reveal">Everything was leading here.</p>
+      <p class="count reveal">One month · four themes · one Nano</p>
+    </div>
+  </section>
+</main>
+<footer>for Nano <button class="replay" id="replay">replay intro</button></footer>
+
+<script>
+const Y = 2026;
+const D = (m, d) => new Date(Y, m - 1, d);
+const addDays = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+const diff = (a, b) => Math.round((b - a) / 864e5);
+const same = (a, b) => diff(a, b) === 0;
+const fmt = d => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+const wd = (d, l = 'short') => d.toLocaleDateString('en-US', { weekday: l });
+
+const START = D(9, 26), EVE = D(10, 25), BDAY = D(10, 26);
+const TOTAL = diff(START, BDAY) + 1;
+
+const WEEKS = [
+  { n: '01', name: 'Comfort Week', tag: 'you feel like home.',                 start: D(9, 26),  accent: '#AE6E48', tint: '#F3E7DA' },
+  { n: '02', name: 'Pretty Week',  tag: 'have you looked at yourself lately?', start: D(10, 3),  accent: '#A8646F', tint: '#F4E6E6' },
+  { n: '03', name: 'Brain Week',   tag: 'my favourite mind.',                  start: D(10, 10), accent: '#46697A', tint: '#E3EAEC' },
+  { n: '04', name: 'Love Week',    tag: 'somehow, it’s always you.',           start: D(10, 17), accent: '#86303C', tint: '#F1E1E1' },
+];
+const RHYTHM = [
+  { dow: 1, day: 'Monday',    k: 'flower', icon: '🌷', what: 'Flowers + Note',  desc: 'Flowers + a tiny handwritten note inspired by the week’s theme.' },
+  { dow: 3, day: 'Wednesday', k: 'letter', icon: '💌', what: 'Creative Piece', desc: 'A small creative piece made around this week’s theme.' },
+  { dow: 5, day: 'Friday',    k: 'gift',   icon: '🎁', what: 'Surprise',       desc: 'A small surprise chosen specifically around this week’s theme.' },
+  { dow: 0, day: 'Sunday',    k: 'movie',  icon: '🎬', what: 'Mini Movie',     desc: 'A short movie/edit capturing the feeling of this week’s theme.' },
+];
+
+// ?date=2026-10-07 previews the site as of that day
+function getToday() {
+  const q = new URLSearchParams(location.search).get('date');
+  if (q) { const [y, m, d] = q.split('-').map(Number); return new Date(y, m - 1, d); }
+  const t = new Date(); return new Date(t.getFullYear(), t.getMonth(), t.getDate());
+}
+const T = getToday();
+
+WEEKS.forEach((w, i) => {
+  w.i = i;
+  w.end = addDays(w.start, 6);
+  w.days = [...Array(7)].map((_, j) => {
+    const date = addDays(w.start, j);
+    return { date, r: RHYTHM.find(r => r.dow === date.getDay()) };
+  });
+  w.plan = RHYTHM.map(r => ({ r, date: w.days.find(d => d.r === r).date }));
+});
+
+const EVENTS = [
+  ...WEEKS.flatMap(w => w.plan.map(p => ({ date: p.date, label: `${p.r.icon} ${p.r.what}`, w }))),
+  { date: EVE,  label: 'Birthday eve' },
+  { date: BDAY, label: 'Nano Day 🎂' },
+].sort((a, b) => a.date - b.date);
+
+const current = WEEKS.find(w => T >= w.start && T <= w.end);
+const nextEv = EVENTS.find(e => e.date > T);
+const todayEv = EVENTS.find(e => same(e.date, T));
+const toGo = diff(T, BDAY);
+const plural = (n, s) => `${n} ${s}${n === 1 ? '' : 's'}`;
+
+/* ---------- now card ---------- */
+(function renderNow() {
+  const el = document.getElementById('now');
+  let label = 'You are here', title, tag = '', rows = [];
+  const nextRow = nextEv && ['Next', `${wd(nextEv.date)}, ${fmt(nextEv.date)} — ${nextEv.label}`];
+
+  if (T < START) {
+    const n = diff(T, START);
+    label = 'Almost';
+    title = n === 1 ? 'It begins tomorrow' : `It begins in ${plural(n, 'day')}`;
+    tag = 'Comfort Week opens ' + wd(START, 'long') + ', ' + fmt(START) + '.';
+    rows = [nextRow, ['Nano Day', `${plural(toGo, 'day')} away`]];
+  } else if (current) {
+    el.style.setProperty('--accent', current.accent);
+    title = `${current.name}`;
+    tag = current.tag;
+    rows = [
+      ['Day', `${diff(START, T) + 1} of ${TOTAL} · week ${current.i + 1} of 4`],
+      ['Today', todayEv ? `${wd(T, 'long')} — ${todayEv.label}` : `${wd(T, 'long')} — free / spontaneous`],
+      nextRow,
+      ['Nano Day', `${plural(toGo, 'day')} to go`],
+    ];
+  } else if (T < BDAY) {
+    el.style.setProperty('--accent', '#B38A4A');
+    title = 'The Nano Finale';
+    tag = 'Everything was leading here.';
+    rows = [
+      ['Today', same(T, EVE) ? 'Birthday eve' : 'Spontaneous'],
+      nextRow,
+    ];
+  } else if (same(T, BDAY)) {
+    el.style.setProperty('--accent', '#B38A4A');
+    label = 'Today';
+    title = 'It’s Nano Day 🎂';
+    tag = 'Everything was leading here.';
+  } else {
+    label = 'Complete';
+    title = 'The Nano Month';
+    tag = 'September 26 → October 26, 2026.';
+  }
+
+  el.innerHTML = `<p class="eyebrow"><i></i>${label}</p><h3>${title}</h3>` +
+    (tag ? `<p class="tag">${tag}</p>` : '') +
+    (rows.length ? `<dl>${rows.filter(Boolean).map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>` : '');
+})();
+
+/* ---------- roadmap bar ---------- */
+(function renderRoad() {
+  const bar = document.getElementById('road'), labels = document.getElementById('road-labels');
+  const segs = [...WEEKS.map(w => ({ n: 7, c: w.accent, l: w.n })), { n: diff(addDays(WEEKS[3].end, 1), BDAY) + 1, c: '#1C1916', l: '🎂' }];
+  bar.innerHTML = segs.map(s => `<span style="flex:${s.n};background:${s.c}"></span>`).join('');
+  labels.innerHTML = segs.map(s => `<span style="flex:${s.n}">${s.l}</span>`).join('');
+  const d = diff(START, T);
+  if (d >= 0 && d < TOTAL) {
+    const pin = document.createElement('i');
+    pin.className = 'pin';
+    pin.style.left = '0%';
+    bar.appendChild(pin);
+    requestAnimationFrame(() => setTimeout(() => pin.style.left = ((d + .5) / TOTAL * 100) + '%', 500));
+  }
+})();
+
+/* ---------- rhythm tiles ---------- */
+document.getElementById('rhythm-grid').innerHTML = RHYTHM.map(r => `
+  <div class="tile reveal" tabindex="0">
+    <span class="ico" data-k="${r.k}">${r.icon}</span>
+    <p class="eyebrow day">${r.day}</p>
+    <h3>${r.what}</h3>
+    <p>${r.desc}</p>
+  </div>`).join('');
+
+document.querySelectorAll('.tile').forEach(t => t.addEventListener('click', () => {
+  t.classList.remove('play'); void t.offsetWidth; t.classList.add('play');
+  setTimeout(() => t.classList.remove('play'), 1100);
+}));
+
+/* ---------- week cards ---------- */
+const openByDefault = current || (T < START ? WEEKS[0] : null);
+document.getElementById('weeks-grid').innerHTML = WEEKS.map(w => {
+  const isNow = w === current, isPast = T > w.end;
+  const strip = w.days.map(d => {
+    const cls = [d.r ? 'key' : '', same(d.date, T) ? 'today' : '', d.date < T ? 'past' : ''].join(' ');
+    return `<div class="${cls}">${wd(d.date).slice(0, 3)}<b>${d.date.getDate()}</b><span class="e">${d.r ? d.r.icon : '·'}</span></div>`;
+  }).join('');
+  const plan = w.plan.map(p => {
+    const cls = same(p.date, T) ? 'is-today' : (p.date < T ? 'done' : '');
+    return `<li class="${cls}"><span class="ico" data-k="${p.r.k}">${p.r.icon}</span>
+      <div><p class="d">${p.r.day}</p><p class="w">${p.r.what}</p></div>
+      <span class="dt">${same(p.date, T) ? 'Today' : fmt(p.date)}</span></li>`;
+  }).join('');
+  const free = w.days.filter(d => !d.r).map(d => wd(d.date)).join(' · ');
+  const lead = diff(w.start, BDAY);
+  return `
+  <article class="week reveal ${w === openByDefault ? 'open' : ''} ${isPast ? 'past' : ''}" style="--accent:${w.accent};--tint:${w.tint}">
+    <button class="week-head" aria-expanded="${w === openByDefault}" aria-controls="wk${w.n}">
+      <div class="wk-top">
+        <span class="wk-num">${w.n}</span>
+        <span class="wk-range">${fmt(w.start)} – ${fmt(w.end)}${isNow ? '<span class="wk-badge">NOW</span>' : ''}</span>
+      </div>
+      <h3>${w.name}</h3>
+      <p class="tag">${w.tag}</p>
+      <div class="wk-foot">
+        <span class="steps">${WEEKS.map(x => `<i class="${x.i <= w.i ? 'on' : ''}"></i>`).join('')}</span>
+        <span class="chev"></span>
+      </div>
+    </button>
+    <div class="week-body" id="wk${w.n}"><div><div class="week-inner">
+      <div class="strip">${strip}</div>
+      <ul class="plan">${plan}</ul>
+      <p class="wk-free">${free} — free / spontaneous</p>
+      <p class="wk-toward"><b>${w.i + 1} of 4</b> toward Nano Day · starts ${plural(lead, 'day')} out${w.i === 3 ? ' — the last stop before the finale.' : '.'}</p>
+    </div></div></div>
+  </article>`;
+}).join('');
+
+document.querySelectorAll('.week-head').forEach(b => b.addEventListener('click', () => {
+  const card = b.closest('.week');
+  const open = card.classList.toggle('open');
+  b.setAttribute('aria-expanded', open);
+}));
+
+/* ---------- finale ---------- */
+const FINAL = [
+  { date: D(10, 24), what: 'spontaneous' },
+  { date: EVE,       what: 'birthday eve' },
+  { date: BDAY,      what: 'Nano Day 🎂', big: true },
+];
+document.getElementById('fdays').innerHTML = FINAL.map(f => `
+  <li class="reveal ${f.big ? 'big' : ''} ${same(f.date, T) ? 'today' : ''}">
+    <p class="d">${wd(f.date)} · ${fmt(f.date)}</p><p class="w">${f.what}</p>
+  </li>`).join('');
+
+/* ---------- reveal on scroll ---------- */
+function startReveals() {
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }), { threshold: .12, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.reveal:not(.in)').forEach((el, i) => {
+    el.style.transitionDelay = el.closest('.hero') ? (i * 90) + 'ms' : '0ms';
+    io.observe(el);
+  });
+}
+
+/* ---------- intro reveal ---------- */
+const GLOW = ['#E3A67E', '#E6A4AE', '#93B7C8', '#DE7C87'];
+// split text into words that blur in one after another, starting at `d` ms
+const w = (text, d = 0, step = 110, tag = 'span') =>
+  text.split(' ').map((t, i) => `<${tag} class="w" style="--d:${d + i * step}">${t}</${tag}>`).join(' ');
+
+const soon = diff(T, START);
+const stampDate = T >= START && T <= BDAY ? T : START;
+const stamp = stampDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+const SCENES = [
+  { html: `<p class="i-s">${w('psst,')}</p><p class="i-xl">${w('Nano.', 600)}</p>` },
+  { glow: true, html: `<p class="i-s">${w('it’s officially')}</p>
+      <p class="i-xxl">${w('your', 700)}<br>${w('birthday', 1200, 0, 'em')}<br>${w('month.', 1700)}</p><p class="stamp w" style="--d:2400">${stamp}</p>` },
+  { html: `<p class="i-s">${w('one whole month, all about you.')}</p>
+      <p class="i-l">${w('September 26', 500)}<span class="arrow"></span>${w('October 26', 1700)}</p>` },
+  { html: `<p class="i-s">${w('four weeks. four sides of you.')}</p>
+      <ul class="i-weeks">${WEEKS.map((x, i) =>
+        `<li class="w" style="--d:${700 + i * 550}"><b style="color:${GLOW[i]}">${x.name}</b><span>${x.tag}</span></li>`).join('')}</ul>` },
+  { html: `<p class="i-s">${w('and every week has a little rhythm.')}</p>
+      <div class="i-rh">${RHYTHM.map((r, i) =>
+        `<p class="w" style="--d:${600 + i * 350}"><em>${r.icon}</em><small>${r.day}</small>${r.what}</p>`).join('')}</div>
+      <p class="i-s">${w('i wanted to do it all 7 days a week, but you’d get bored of me 😔', 1400, 80)}</p>` },
+  { glow: true, html: `<p class="i-s">${w('and all of it leads to')}</p>
+      <p class="i-xl">${w('Nano', 700)} ${w('Day', 900, 0, 'em')} ${w('🎂', 1300)}</p>
+      <p class="i-s" style="margin-top:14px">${w('October 26', 1800)}</p>
+      <button class="i-go w" style="--d:2500">open the plan</button>` },
+];
+
+const song = document.getElementById('song'), musicBtn = document.getElementById('music');
+musicBtn.hidden = false;
+// use song.mp3 if it's there; otherwise play a soft music-box loop generated in the browser
+let hasSong = false, synth = null;
+fetch('song.mp3', { method: 'HEAD' }).then(r => { hasSong = r.ok; }).catch(() => {});
+
+function startSynth() {
+  if (synth) { synth.ctx.resume(); return; }
+  try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {} // play even with the silent switch on
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const master = ctx.createGain();
+  master.gain.setValueAtTime(0, ctx.currentTime);
+  master.gain.linearRampToValueAtTime(.55, ctx.currentTime + 3);
+  master.connect(ctx.destination);
+  const echo = ctx.createDelay(), fb = ctx.createGain(), wet = ctx.createGain();
+  echo.delayTime.value = .36; fb.gain.value = .35; wet.gain.value = .35;
+  echo.connect(fb); fb.connect(echo); echo.connect(wet); wet.connect(master);
+  const hz = m => 440 * Math.pow(2, (m - 69) / 12);
+  const CHORDS = [[65, 69, 72, 76], [64, 67, 71, 74], [62, 65, 69, 72], [60, 64, 67, 71]]; // Fmaj7 Em7 Dm7 Cmaj7
+  const PATTERN = [0, 1, 2, 3, 2, 1, 3, 2];
+  const beat = .42;
+  let step = 0, t = ctx.currentTime + .1;
+  const note = (m, time, dur, vol) => {
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = 'sine'; o.frequency.value = hz(m);
+    g.gain.setValueAtTime(0, time);
+    g.gain.linearRampToValueAtTime(vol, time + .012);
+    g.gain.exponentialRampToValueAtTime(.0001, time + dur);
+    o.connect(g); g.connect(master); g.connect(echo);
+    o.start(time); o.stop(time + dur + .05);
+  };
+  const tick = () => {
+    while (t < ctx.currentTime + .6) {
+      const c = CHORDS[Math.floor(step / 8) % 4];
+      note(c[PATTERN[step % 8]] + 12, t, 1.6, .12);
+      if (step % 8 === 0) note(c[0] - 12, t, 3.4, .1);
+      t += beat; step++;
+    }
+  };
+  tick();
+  synth = { ctx, timer: setInterval(tick, 150) };
+}
+const musicOn = () => hasSong ? !song.paused : !!synth && synth.ctx.state === 'running';
+function playSong() {
+  if (hasSong) { const p = song.play(); if (p) p.catch(() => {}); }
+  else startSynth();
+  musicBtn.classList.add('on');
+}
+function pauseSong() {
+  if (hasSong) song.pause(); else if (synth) synth.ctx.suspend();
+  musicBtn.classList.remove('on');
+}
+musicBtn.onclick = () => musicOn() ? pauseSong() : playSong();
+
+function runIntro() {
+  const intro = document.getElementById('intro'), holder = document.getElementById('scenes'), bars = document.getElementById('bars');
+  holder.innerHTML = SCENES.map(s => `<div class="scene">${s.html}</div>`).join('');
+  bars.innerHTML = SCENES.map(() => '<i></i>').join('');
+  const els = [...holder.children], ticks = [...bars.children];
+  let i = -1;
+  intro.hidden = false;
+  intro.classList.remove('done', 'gone', 'started', 'glow');
+  document.body.classList.add('locked');
+
+  function go(n) {
+    if (n < 0 || n >= els.length) return;
+    i = n;
+    els.forEach((el, j) => { el.classList.toggle('on', j === i); el.classList.toggle('off', j < i); });
+    ticks.forEach((t, j) => { t.className = j < i ? 'seen' : j === i ? 'cur' : ''; });
+    intro.classList.toggle('glow', !!SCENES[i].glow);
+    intro.querySelector('.tap').style.opacity = i === els.length - 1 ? 0 : '';
+  }
+  function close() {
+    intro.classList.add('done');
+    document.body.classList.remove('locked');
+    try { localStorage.setItem('nanoIntroSeen', '1'); } catch (e) {}
+    window.scrollTo(0, 0);
+    setTimeout(startReveals, 350);
+    setTimeout(() => intro.classList.add('gone'), 1400);
+  }
+  intro.querySelector('.tap').style.opacity = '';
+  intro.onclick = e => {
+    if (e.target.closest('.i-go, .skip')) return close();
+    if (i === -1) {
+      // first tap opens it: this gesture is what lets iPhone play the song
+      playSong();
+      intro.classList.add('started');
+      i = -2;
+      setTimeout(() => go(0), 1100);
+      return;
+    }
+    if (i >= 0) go(e.clientX < innerWidth * 0.3 ? i - 1 : i + 1);
+  };
+}
+
+let seen = false;
+try { seen = localStorage.getItem('nanoIntroSeen') === '1'; } catch (e) {}
+// ?intro forces the reveal, ?intro=0 skips it
+const introQ = new URLSearchParams(location.search).get('intro');
+if (introQ === '0' || (seen && introQ === null)) {
+  startReveals();
+  document.addEventListener('pointerdown', e => { if (!e.target.closest('#music') && !musicOn()) playSong(); }, { once: true });
+}
+else runIntro();
+document.getElementById('replay').onclick = () => { document.querySelectorAll('.reveal.in').forEach(el => el.classList.remove('in')); runIntro(); };
+</script>
+</body>
+</html>
