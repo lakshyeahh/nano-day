@@ -166,6 +166,8 @@ footer{background:#1C1916;color:rgba(239,231,220,.3);text-align:center;font-size
 }
 /* ---------- intro reveal ---------- */
 body.locked{overflow:hidden}
+#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:70}
+.fdays li.big{cursor:pointer;-webkit-tap-highlight-color:transparent}
 .intro{position:fixed;inset:0;z-index:60;overflow:hidden;background:#1C1916;color:#EFE7DC;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:opacity 1.3s var(--ease),visibility 0s 1.3s}
 .intro.done{opacity:0;visibility:hidden;pointer-events:none}
 .intro.gone{display:none}
@@ -226,6 +228,7 @@ body.locked{overflow:hidden}
 </style>
 </head>
 <body>
+<canvas id="fx" aria-hidden="true"></canvas>
 
 <div class="intro" id="intro" hidden>
   <div class="bars" id="bars"></div>
@@ -310,6 +313,88 @@ function getToday() {
   const t = new Date(); return new Date(t.getFullYear(), t.getMonth(), t.getDate());
 }
 const T = getToday();
+
+/* ---------- petals, confetti, sparkles (one canvas, sleeps when empty) ---------- */
+const FX = (() => {
+  const off = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const cv = document.getElementById('fx'), cx = cv.getContext('2d');
+  let W = 0, H = 0, parts = [], running = false, last = 0;
+  const size = () => {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    cv.width = W * dpr; cv.height = H * dpr;
+    cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  };
+  size(); addEventListener('resize', size);
+  const PETAL = ['#F4C9CF', '#F7DCD6', '#EFB7B0', '#FBEDE6', '#E9A9A0'];
+  const PAPER = ['#D8B67C', '#E3A67E', '#E6A4AE', '#93B7C8', '#DE7C87', '#F3E7DA'];
+  const rnd = (a, b) => a + Math.random() * (b - a), pick = a => a[Math.random() * a.length | 0];
+
+  function add(p) {
+    if (off || parts.length > 240) return;
+    parts.push(Object.assign({ life: 0, rot: rnd(0, 6.3), flip: rnd(0, 6.3), ph: rnd(0, 6.3), sf: rnd(.03, .06), alpha: 1, max: 0 }, p));
+    if (!running) { running = true; last = performance.now(); requestAnimationFrame(loop); }
+  }
+  function draw(p, a) {
+    cx.save();
+    cx.globalAlpha = a;
+    cx.translate(p.x, p.y);
+    cx.rotate(p.rot);
+    if (p.type === 'spark') {
+      const r = p.s * (.7 + .3 * Math.sin(p.life * .25));
+      cx.fillStyle = p.c;
+      cx.beginPath(); cx.moveTo(0, -r * 2.2); cx.quadraticCurveTo(0, 0, r * 2.2, 0); cx.quadraticCurveTo(0, 0, 0, r * 2.2);
+      cx.quadraticCurveTo(0, 0, -r * 2.2, 0); cx.quadraticCurveTo(0, 0, 0, -r * 2.2); cx.fill();
+    } else {
+      cx.scale(Math.max(.08, Math.abs(Math.cos(p.flip))), 1);
+      cx.fillStyle = p.c;
+      if (p.type === 'petal') {
+        const k = p.s;
+        cx.beginPath(); cx.moveTo(0, -k); cx.quadraticCurveTo(k * .95, -k * .15, 0, k); cx.quadraticCurveTo(-k * .95, -k * .15, 0, -k); cx.fill();
+        cx.strokeStyle = 'rgba(255,255,255,.45)'; cx.lineWidth = .6;
+        cx.beginPath(); cx.moveTo(0, -k * .6); cx.lineTo(0, k * .7); cx.stroke();
+      } else {
+        cx.fillRect(-p.s * .22, -p.s * .65, p.s * .44, p.s * 1.3);
+      }
+    }
+    cx.restore();
+  }
+  function loop(now) {
+    const dt = Math.min((now - last) / 16.67, 3); last = now;
+    cx.clearRect(0, 0, W, H);
+    parts = parts.filter(p => {
+      p.life += dt;
+      p.vx *= Math.pow(p.drag, dt); p.vy = p.vy * Math.pow(p.drag, dt) + p.g * dt;
+      p.x += (p.vx + Math.sin(p.life * p.sf + p.ph) * p.sway) * dt;
+      p.y += p.vy * dt;
+      p.rot += p.vr * dt; p.flip += p.vf * dt;
+      const fade = p.max ? 1 - p.life / p.max : 1;
+      if (fade <= 0 || p.y > H + 40 || p.x < -60 || p.x > W + 60) return false;
+      draw(p, Math.min(1, p.life / 10) * fade * p.alpha);
+      return true;
+    });
+    if (parts.length) requestAnimationFrame(loop);
+    else { running = false; cx.clearRect(0, 0, W, H); }
+  }
+
+  const petal = (x, y, o = {}) => add(Object.assign({ type: 'petal', x, y, c: pick(PETAL), s: rnd(5, 9), vx: rnd(-.3, .3), vy: rnd(.3, .9),
+    g: .01, drag: .99, sway: rnd(.4, .9), vr: rnd(-.02, .02), vf: rnd(.02, .06), alpha: rnd(.75, .95) }, o));
+  const paper = (x, y, ang, sp) => add({ type: 'paper', x, y, c: pick(PAPER), s: rnd(7, 11), vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp,
+    g: .09, drag: .965, sway: rnd(.3, .9), vr: rnd(-.08, .08), vf: rnd(.12, .28) });
+  const spark = (x, y, c = '#D8B67C', o = {}) => add(Object.assign({ type: 'spark', x, y, c, s: rnd(1.2, 2.6), vx: rnd(-.3, .3), vy: rnd(-.5, .1),
+    g: 0, drag: .98, sway: .15, vr: 0, vf: 0, max: rnd(60, 120) }, o));
+  const later = (n, dur, fn) => { for (let i = 0; i < n; i++) setTimeout(fn, (i / n) * dur + rnd(0, dur / n)); };
+
+  return {
+    petalRain: (n = 24, dur = 4000) => later(n, dur, () => petal(rnd(-10, W + 10), -20)),
+    petalBurst: (x, y, n = 18) => { for (let i = 0; i < n; i++) { const a = rnd(0, 6.3), sp = rnd(2, 5.5); petal(x, y, { vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 1.5, drag: .95 }); } },
+    confetti: (x, y, n = 30, ang = -Math.PI / 2, spread = 1.1) => { for (let i = 0; i < n; i++) paper(x, y, ang + rnd(-spread / 2, spread / 2), rnd(7, 13)); },
+    corners: (n = 45) => { FX.confetti(-10, H + 10, n, -1.05, .7); FX.confetti(W + 10, H + 10, n, -2.09, .7); },
+    sparkle: (n = 14, x, y, c) => later(n, 1200, () => spark(x == null ? rnd(20, W - 20) : x + rnd(-40, 40), y == null ? rnd(60, H - 60) : y + rnd(-30, 30), c)),
+    ambient: () => petal(rnd(0, W), -20, { alpha: rnd(.45, .7), vy: rnd(.3, .6) }),
+  };
+})();
+const centerOf = el => { const r = el.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; };
 
 WEEKS.forEach((w, i) => {
   w.i = i;
@@ -407,6 +492,9 @@ document.getElementById('rhythm-grid').innerHTML = RHYTHM.map(r => `
 document.querySelectorAll('.tile').forEach(t => t.addEventListener('click', () => {
   t.classList.remove('play'); void t.offsetWidth; t.classList.add('play');
   setTimeout(() => t.classList.remove('play'), 1100);
+  const ico = t.querySelector('.ico'), [x, y] = centerOf(ico);
+  ({ flower: () => FX.petalBurst(x, y, 12), letter: () => FX.sparkle(10, x, y, '#DE7C87'),
+     gift: () => FX.confetti(x, y, 22), movie: () => FX.sparkle(12, x, y) })[ico.dataset.k]();
 }));
 
 /* ---------- week cards ---------- */
@@ -452,6 +540,7 @@ document.querySelectorAll('.week-head').forEach(b => b.addEventListener('click',
   const card = b.closest('.week');
   const open = card.classList.toggle('open');
   b.setAttribute('aria-expanded', open);
+  if (open) { const [x, y] = centerOf(b.querySelector('.chev')); FX.sparkle(8, x, y, getComputedStyle(card).getPropertyValue('--accent').trim()); }
 }));
 
 /* ---------- finale ---------- */
@@ -464,6 +553,18 @@ document.getElementById('fdays').innerHTML = FINAL.map(f => `
   <li class="reveal ${f.big ? 'big' : ''} ${same(f.date, T) ? 'today' : ''}">
     <p class="d">${wd(f.date)} · ${fmt(f.date)}</p><p class="w">${f.what}</p>
   </li>`).join('');
+
+const bigDay = document.querySelector('.fdays li.big');
+bigDay.addEventListener('click', () => { const [x, y] = centerOf(bigDay); FX.confetti(x, y, 36); FX.sparkle(10, x, y); });
+new IntersectionObserver((es, o) => es.forEach(e => {
+  if (e.isIntersecting) { FX.corners(40); FX.sparkle(16); o.disconnect(); }
+}), { threshold: .8 }).observe(bigDay);
+
+// a petal every few seconds while the top of the page is on screen
+setInterval(() => {
+  const intro = document.getElementById('intro');
+  if (!document.hidden && scrollY < innerHeight * .6 && (intro.hidden || intro.classList.contains('gone'))) FX.ambient();
+}, 2600);
 
 /* ---------- reveal on scroll ---------- */
 function startReveals() {
@@ -570,7 +671,10 @@ function runIntro() {
 
   function go(n) {
     if (n < 0 || n >= els.length) return;
+    const forward = n > i;
     i = n;
+    if (forward && i === 1) { FX.petalRain(28, 4500); FX.sparkle(14); }
+    if (forward && i === els.length - 1) { setTimeout(() => { FX.corners(50); FX.sparkle(20); }, 900); }
     els.forEach((el, j) => { el.classList.toggle('on', j === i); el.classList.toggle('off', j < i); });
     ticks.forEach((t, j) => { t.className = j < i ? 'seen' : j === i ? 'cur' : ''; });
     intro.classList.toggle('glow', !!SCENES[i].glow);
@@ -583,6 +687,8 @@ function runIntro() {
     window.scrollTo(0, 0);
     setTimeout(startReveals, 350);
     setTimeout(() => intro.classList.add('gone'), 1400);
+    FX.petalRain(16, 3500);
+    if (same(T, BDAY)) setTimeout(() => FX.corners(60), 1200);
   }
   intro.querySelector('.tap').style.opacity = '';
   intro.onclick = e => {
@@ -591,6 +697,8 @@ function runIntro() {
       // first tap opens it: this gesture is what lets iPhone play the song
       playSong();
       intro.classList.add('started');
+      FX.petalBurst(innerWidth / 2, innerHeight / 2, 26);
+      FX.sparkle(10, innerWidth / 2, innerHeight / 2);
       i = -2;
       setTimeout(() => go(0), 1100);
       return;
@@ -605,6 +713,7 @@ try { seen = localStorage.getItem('nanoIntroSeen') === '1'; } catch (e) {}
 const introQ = new URLSearchParams(location.search).get('intro');
 if (introQ === '0' || (seen && introQ === null)) {
   startReveals();
+  if (same(T, BDAY)) setTimeout(() => FX.corners(60), 1200);
   document.addEventListener('pointerdown', e => { if (!e.target.closest('#music') && !musicOn()) playSong(); }, { once: true });
 }
 else runIntro();
