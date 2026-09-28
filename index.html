@@ -380,6 +380,11 @@ const KEEPSAKES = [
   },
 ];
 
+// plain links under a day in its week card (files that open on their own, like a PDF)
+const DAY_LINKS = [
+  { week: 0, dow: 0, label: 'read the movie manga ↗', href: 'files/comfort-week-movie-manga.pdf' },
+];
+
 const RHYTHM = [
   { dow: 1, day: 'Monday',    k: 'flower', icon: '🌷', what: 'Flowers + Note',  desc: 'Flowers + a tiny handwritten note inspired by the week’s theme.' },
   { dow: 3, day: 'Wednesday', k: 'letter', icon: '💌', what: 'Creative Piece', desc: 'A small creative piece made around this week’s theme.' },
@@ -589,7 +594,7 @@ document.getElementById('weeks-grid').innerHTML = WEEKS.map(w => {
   const plan = w.plan.map(p => {
     const cls = same(p.date, T) ? 'is-today' : (p.date < T ? 'done' : '');
     return `<li class="${cls}"><span class="ico" data-k="${p.r.k}">${p.r.icon}</span>
-      <div><p class="d">${p.r.day}</p><p class="w">${p.r.what}</p>${(k => k ? `<a class="ks-link" href="#ks-${k.id}">open it ↗</a>` : '')(KEEPSAKES.find(k => k.week === w.i && k.dow === p.r.dow && p.date <= T))}</div>
+      <div><p class="d">${p.r.day}</p><p class="w">${p.r.what}</p>${(k => k ? `<a class="ks-link" href="#ks-${k.id}">open it ↗</a>` : '')(KEEPSAKES.find(k => k.week === w.i && k.dow === p.r.dow && p.date <= T))}${p.date <= T ? DAY_LINKS.filter(l => l.week === w.i && l.dow === p.r.dow).map(l => `<a class="ks-link" href="${l.href}" target="_blank" rel="noopener">${l.label}</a>`).join(' ') : ''}</div>
       <span class="dt">${same(p.date, T) ? 'Today' : fmt(p.date)}</span></li>`;
   }).join('');
   const free = w.days.filter(d => !d.r).map(d => wd(d.date)).join(' · ');
