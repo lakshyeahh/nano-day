@@ -156,6 +156,64 @@ section{padding-top:72px;padding-bottom:72px}
 .count{margin-top:14px;font:500 11px/1.6 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:rgba(239,231,220,.45)}
 footer{background:#1C1916;color:rgba(239,231,220,.3);text-align:center;font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:0 0 40px}
 
+/* ---------- keepsakes: the letters she opens ---------- */
+.keepsakes{padding-top:32px}
+.ks{--accent:#AE6E48;--tint:#F3E7DA;scroll-margin-top:24px}
+.ks+.ks{margin-top:72px}
+.ks-label{display:inline-flex;align-items:center;gap:8px;color:var(--accent)}
+.ks-label::before{content:"";width:18px;height:1px;background:currentColor}
+.ks h2{font:400 clamp(30px,8.6vw,44px)/1.02 var(--serif);text-transform:uppercase;letter-spacing:-.005em;margin-top:14px}
+.ks h2 em{display:block;font-style:italic;text-transform:none;color:var(--accent);margin-top:4px}
+.ks-sub{font:italic 18px/1.4 var(--serif);color:#5A524B;margin-top:12px;max-width:32ch}
+.ks-stage{display:grid;margin-top:30px}
+.ks-stage>*{grid-area:1/1}
+
+.ks-env{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:40px 22px 30px;text-align:center;
+  box-shadow:0 18px 40px -28px rgba(60,40,20,.45);transition:opacity .9s var(--ease),transform 1.1s var(--ease),visibility 0s 1.1s}
+.ks-peek{position:absolute;inset:-30px;background:center/cover no-repeat;filter:blur(22px) saturate(.7);opacity:.28;pointer-events:none}
+.ks-env>*:not(.ks-peek){position:relative}
+.env{width:176px;height:116px;margin:0 auto 30px;position:relative;perspective:700px;animation:drift 5s ease-in-out infinite}
+@keyframes drift{50%{transform:translateY(-5px) rotate(-.6deg)}}
+.env i{position:absolute;display:block}
+.env .body{inset:0;border-radius:8px;background:var(--tint);box-shadow:0 14px 26px -16px rgba(60,40,20,.55)}
+.env .fold{inset:0;border-radius:8px;background:#EBDCCB;clip-path:polygon(0 100%,50% 42%,100% 100%)}
+.env .flap{left:0;right:0;top:0;height:64%;background:#E6D3BE;clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:50% 0;transition:transform 1s var(--ease);z-index:2;border-radius:8px 8px 0 0}
+.env .seal{left:50%;top:56%;width:34px;height:34px;margin:-17px;border-radius:50%;background:var(--accent);z-index:3;display:grid;place-items:center;font-size:14px;
+  box-shadow:0 0 0 3px rgba(255,255,255,.25) inset,0 4px 10px -4px rgba(60,30,10,.6);transition:opacity .4s ease,transform .6s var(--ease)}
+.ks-prompt{font:italic 23px/1.3 var(--serif);max-width:20ch;margin:0 auto}
+.ks-btn{all:unset;display:inline-block;margin-top:22px;padding:15px 26px;border-radius:99px;background:var(--ink);color:var(--paper);font:500 12px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .4s var(--ease),background .4s}
+.ks-btn:hover{background:var(--accent)}
+.ks-btn:active{transform:scale(.97)}
+.ks-btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+.ks-paper{display:none;margin:0 4px}
+.ks-paper:focus{outline:none}
+.ks-sheet{--tilt:-.7deg;opacity:0;transform:translateY(26px) scale(.955) rotate(-2.2deg);filter:blur(6px);
+  transition:opacity 1.6s var(--ease),transform 1.8s var(--ease),filter 1.4s var(--ease)}
+.ks-sheet:nth-child(even){--tilt:.6deg}
+.ks-sheet+.ks-sheet{margin-top:38px;transition-delay:.7s}
+.ks-page{display:block;text-align:right;margin:0 6px 8px;font:500 10px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.ks-sheet a{display:block;position:relative;padding:10px;background:#FFFDF9;border-radius:14px;
+  box-shadow:0 1px 0 rgba(255,255,255,.8) inset,0 2px 4px rgba(60,40,20,.06),0 24px 46px -30px rgba(60,40,20,.55)}
+.ks-sheet a::before{content:"";position:absolute;z-index:1;left:50%;top:-12px;width:92px;height:26px;margin-left:-46px;transform:rotate(-3deg);
+  background:rgba(232,214,190,.72);box-shadow:0 1px 2px rgba(60,40,20,.08)}
+.ks-sheet img{display:block;width:100%;height:auto;border-radius:8px}
+.ks-zoom{display:block;text-align:center;margin-top:16px;font:500 10px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.ks-missing{padding:56px 20px;text-align:center;font:italic 19px/1.4 var(--serif);color:var(--muted)}
+.ks-after{text-align:center;margin-top:34px;opacity:0;transform:translateY(10px);transition:opacity 1.2s var(--ease) 2s,transform 1.2s var(--ease) 2s}
+.ks-after p{font:italic 24px/1.3 var(--serif)}
+.ks-after small{display:block;margin-top:10px;font:500 11px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+
+.ks.opening .env .flap{transform:rotateX(180deg)}
+.ks.opening .env .seal{opacity:0;transform:scale(.6)}
+.ks.opened .ks-env{opacity:0;transform:translateY(18px) scale(.97);visibility:hidden;pointer-events:none}
+.ks.shown .ks-paper{display:block}
+.ks.opened .ks-sheet{opacity:1;transform:rotate(var(--tilt));filter:blur(0)}
+.ks.opened .ks-after{opacity:1;transform:none}
+.ks.settled .ks-env{display:none}
+.ks.instant *{transition:none!important}
+.plan .ks-link{display:inline-block;margin-top:6px;font:500 10px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--accent);text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:2px}
+
 /* ---------- larger screens ---------- */
 @media (min-width:760px){
   .wrap{max-width:720px}
@@ -258,6 +316,8 @@ body.locked{overflow:hidden}
 <button class="music" id="music" aria-label="Play or pause music" hidden><span class="eq"><i></i><i></i><i></i></span></button>
 
 <main>
+  <section id="keepsakes" class="keepsakes wrap" hidden></section>
+
   <section id="rhythm" class="wrap">
     <div class="sec-head reveal"><span class="eyebrow">I</span><h2>The Rhythm</h2></div>
     <div class="rhythm" id="rhythm-grid"></div>
@@ -299,6 +359,27 @@ const WEEKS = [
   { n: '03', name: 'Brain Week',   tag: 'my favourite mind.',                  start: D(10, 10), accent: '#46697A', tint: '#E3EAEC' },
   { n: '04', name: 'Love Week',    tag: 'somehow, it’s always you.',           start: D(10, 17), accent: '#86303C', tint: '#F1E1E1' },
 ];
+/* ---------- keepsakes: one entry per thing you give her ----------
+   Each shows up on its date as a sealed letter she opens, newest first,
+   and its day in the week card links to it. Add the next one below. */
+const handwrittenNoteImages = ['images/comfort-week-note-1.jpg', 'images/comfort-week-note-2.jpg'];
+
+const KEEPSAKES = [
+  {
+    id: 'comfort-monday',
+    week: 0, dow: 1,
+    label: 'comfort week · monday',
+    title: ['Monday —', 'a little something for you'],
+    sub: 'because i can’t show up at your door, so i sent a little piece of me instead.',
+    prompt: 'there’s something i wanted you to have today.',
+    images: handwrittenNoteImages,
+    alt: ['Page one of a handwritten notebook letter titled “my buba…”, decorated with paper balloons and pink highlighter, written for Comfort Week.',
+          'Page two of the handwritten letter, with a cut-out polka-dot paper heart, ending with a signature.'],
+    after: 'some things are better handwritten.',
+    sign: 'happy comfort week, nano 🤍',
+  },
+];
+
 const RHYTHM = [
   { dow: 1, day: 'Monday',    k: 'flower', icon: '🌷', what: 'Flowers + Note',  desc: 'Flowers + a tiny handwritten note inspired by the week’s theme.' },
   { dow: 3, day: 'Wednesday', k: 'letter', icon: '💌', what: 'Creative Piece', desc: 'A small creative piece made around this week’s theme.' },
@@ -508,7 +589,7 @@ document.getElementById('weeks-grid').innerHTML = WEEKS.map(w => {
   const plan = w.plan.map(p => {
     const cls = same(p.date, T) ? 'is-today' : (p.date < T ? 'done' : '');
     return `<li class="${cls}"><span class="ico" data-k="${p.r.k}">${p.r.icon}</span>
-      <div><p class="d">${p.r.day}</p><p class="w">${p.r.what}</p></div>
+      <div><p class="d">${p.r.day}</p><p class="w">${p.r.what}</p>${(k => k ? `<a class="ks-link" href="#ks-${k.id}">open it ↗</a>` : '')(KEEPSAKES.find(k => k.week === w.i && k.dow === p.r.dow && p.date <= T))}</div>
       <span class="dt">${same(p.date, T) ? 'Today' : fmt(p.date)}</span></li>`;
   }).join('');
   const free = w.days.filter(d => !d.r).map(d => wd(d.date)).join(' · ');
@@ -565,6 +646,67 @@ setInterval(() => {
   const intro = document.getElementById('intro');
   if (!document.hidden && scrollY < innerHeight * .6 && (intro.hidden || intro.classList.contains('gone'))) FX.ambient();
 }, 2600);
+
+/* ---------- keepsakes ---------- */
+(function renderKeepsakes() {
+  const host = document.getElementById('keepsakes');
+  const ready = KEEPSAKES
+    .map(k => ({ ...k, w: WEEKS[k.week], date: WEEKS[k.week].days.find(d => d.date.getDay() === k.dow).date }))
+    .filter(k => k.date <= T)
+    .sort((a, b) => b.date - a.date);
+  if (!ready.length) return;
+  host.hidden = false;
+  host.innerHTML = ready.map(k => `
+    <article class="ks" id="ks-${k.id}" style="--accent:${k.w.accent};--tint:${k.w.tint}" aria-labelledby="ks-${k.id}-t">
+      <p class="eyebrow ks-label reveal">${k.label} · ${fmt(k.date)}</p>
+      <h2 class="reveal" id="ks-${k.id}-t">${k.title[0]}<em>${k.title[1]}</em></h2>
+      <p class="ks-sub reveal">${k.sub}</p>
+      <div class="ks-stage reveal">
+        <div class="ks-env">
+          <div class="ks-peek" style="background-image:url('${k.images[0]}')"></div>
+          <div class="env" aria-hidden="true"><i class="body"></i><i class="fold"></i><i class="flap"></i><i class="seal">🌷</i></div>
+          <p class="ks-prompt">${k.prompt}</p>
+          <button class="ks-btn" type="button" aria-controls="ks-${k.id}-p">open this ♡</button>
+        </div>
+        <figure class="ks-paper" id="ks-${k.id}-p" tabindex="-1">
+          ${k.images.map((src, n) => `<div class="ks-sheet">
+            ${k.images.length > 1 ? `<span class="ks-page">${n + 1} / ${k.images.length}</span>` : ''}
+            <a href="${src}" target="_blank" rel="noopener" aria-label="Open page ${n + 1} full size">
+              <img src="${src}" alt="${k.alt[n] || k.alt[0]}" decoding="async">
+            </a></div>`).join('')}
+          <figcaption class="ks-zoom">tap a page to see it bigger</figcaption>
+        </figure>
+      </div>
+      <div class="ks-after"><p>${k.after}</p><small>${k.sign}</small></div>
+    </article>`).join('');
+
+  host.querySelectorAll('.ks').forEach(card => {
+    const key = 'nanoOpened:' + card.id;
+    const paper = card.querySelector('.ks-paper');
+    paper.querySelectorAll('img').forEach(img => img.addEventListener('error', () => {
+      img.closest('a').outerHTML = '<div class="ks-missing">this page is on its way — check back in a little while.</div>';
+    }));
+    const open = instant => {
+      if (instant) card.classList.add('instant');
+      card.classList.add('opening');
+      setTimeout(() => {
+        card.classList.add('shown');
+        void paper.offsetWidth;
+        card.classList.add('opened');
+        if (!instant) {
+          paper.focus({ preventScroll: true });
+          paper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        setTimeout(() => card.classList.add('settled'), instant ? 0 : 1300);
+      }, instant ? 0 : 750);
+      try { localStorage.setItem(key, '1'); } catch (e) {}
+    };
+    card.querySelector('.ks-btn').addEventListener('click', () => open(false));
+    let seen = false;
+    try { seen = localStorage.getItem(key) === '1'; } catch (e) {}
+    if (seen) open(true);
+  });
+})();
 
 /* ---------- reveal on scroll ---------- */
 function startReveals() {
