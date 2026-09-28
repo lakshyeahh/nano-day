@@ -214,6 +214,20 @@ footer{background:#1C1916;color:rgba(239,231,220,.3);text-align:center;font-size
 .ks.instant *{transition:none!important}
 .plan .ks-link{display:inline-block;margin-top:6px;font:500 10px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--accent);text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:2px}
 
+/* ---------- mini movie player ---------- */
+.movie{position:fixed;inset:0;z-index:65;background:#1C1916;color:#EFE7DC;display:flex;flex-direction:column;justify-content:center;
+  padding:max(64px,env(safe-area-inset-top)) 18px max(28px,env(safe-area-inset-bottom));opacity:0;transition:opacity .6s var(--ease)}
+.movie[hidden]{display:none}
+.movie.on{opacity:1}
+.movie-close{all:unset;position:absolute;top:max(22px,env(safe-area-inset-top));right:18px;padding:10px;cursor:pointer;
+  font:500 10px/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:rgba(239,231,220,.6)}
+.movie-close:focus-visible{outline:1px solid var(--gold);border-radius:6px}
+.movie-label{color:var(--gold);text-align:center;margin-bottom:18px}
+.movie-frame{width:100%;max-width:720px;margin:0 auto;transform:scale(.97);transition:transform .8s var(--ease)}
+.movie.on .movie-frame{transform:none}
+.movie iframe{display:block;width:100%;aspect-ratio:16/9;max-height:74vh;border:0;border-radius:14px;background:#000;box-shadow:0 30px 60px -30px rgba(0,0,0,.8)}
+.movie-alt{display:block;text-align:center;margin-top:16px;font:500 10px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:rgba(239,231,220,.5)}
+
 /* ---------- larger screens ---------- */
 @media (min-width:760px){
   .wrap{max-width:720px}
@@ -315,6 +329,15 @@ body.locked{overflow:hidden}
 <audio id="song" src="song.mp3" loop preload="auto" playsinline></audio>
 <button class="music" id="music" aria-label="Play or pause music" hidden><span class="eq"><i></i><i></i><i></i></span></button>
 
+<div class="movie" id="movie" role="dialog" aria-modal="true" aria-labelledby="movie-label" hidden>
+  <button class="movie-close" id="movie-close" type="button">close</button>
+  <p class="eyebrow movie-label" id="movie-label"></p>
+  <div class="movie-frame">
+    <iframe id="movie-frame" title="Comfort week mini movie" allow="autoplay; fullscreen" allowfullscreen></iframe>
+    <a class="movie-alt" id="movie-alt" target="_blank" rel="noopener">not loading? open it in google drive ↗</a>
+  </div>
+</div>
+
 <main>
   <section id="keepsakes" class="keepsakes wrap" hidden></section>
 
@@ -380,10 +403,14 @@ const KEEPSAKES = [
   },
 ];
 
-// plain links under a day in its week card (files that open on their own, like a PDF)
+// paste the Google Drive share link here (sharing must be "Anyone with the link")
+const comfortWeekMovieLink = 'https://drive.google.com/file/d/15_a9bqvYGK-9aCbOtqdnjB4LN9IJ2MMO/view?usp=sharing';
+
+// links under a day in its week card; a Drive file link plays in an embedded player, anything else opens in a new tab
 const DAY_LINKS = [
-  { week: 0, dow: 0, label: 'read the movie manga ↗', href: 'files/comfort-week-movie-manga.pdf' },
+  { week: 0, dow: 0, label: 'watch the mini movie ▶', href: comfortWeekMovieLink, title: 'comfort week · the mini movie' },
 ];
+const driveId = url => (url.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:export=\w+&)?id=)([\w-]+)/) || [])[1];
 
 const RHYTHM = [
   { dow: 1, day: 'Monday',    k: 'flower', icon: '🌷', what: 'Flowers + Note',  desc: 'Flowers + a tiny handwritten note inspired by the week’s theme.' },
@@ -594,7 +621,9 @@ document.getElementById('weeks-grid').innerHTML = WEEKS.map(w => {
   const plan = w.plan.map(p => {
     const cls = same(p.date, T) ? 'is-today' : (p.date < T ? 'done' : '');
     return `<li class="${cls}"><span class="ico" data-k="${p.r.k}">${p.r.icon}</span>
-      <div><p class="d">${p.r.day}</p><p class="w">${p.r.what}</p>${(k => k ? `<a class="ks-link" href="#ks-${k.id}">open it ↗</a>` : '')(KEEPSAKES.find(k => k.week === w.i && k.dow === p.r.dow && p.date <= T))}${p.date <= T ? DAY_LINKS.filter(l => l.week === w.i && l.dow === p.r.dow).map(l => `<a class="ks-link" href="${l.href}" target="_blank" rel="noopener">${l.label}</a>`).join(' ') : ''}</div>
+      <div><p class="d">${p.r.day}</p><p class="w">${p.r.what}</p>${(k => k ? `<a class="ks-link" href="#ks-${k.id}">open it ↗</a>` : '')(KEEPSAKES.find(k => k.week === w.i && k.dow === p.r.dow && p.date <= T))}${p.date <= T ? DAY_LINKS.filter(l => l.week === w.i && l.dow === p.r.dow).filter(l => l.href).map(l => driveId(l.href)
+      ? `<a class="ks-link" href="${l.href}" target="_blank" rel="noopener" data-drive="${driveId(l.href)}" data-title="${l.title || ''}">${l.label}</a>`
+      : `<a class="ks-link" href="${l.href}" target="_blank" rel="noopener">${l.label}</a>`).join(' ') : ''}</div>
       <span class="dt">${same(p.date, T) ? 'Today' : fmt(p.date)}</span></li>`;
   }).join('');
   const free = w.days.filter(d => !d.r).map(d => wd(d.date)).join(' · ');
@@ -711,6 +740,41 @@ setInterval(() => {
     try { seen = localStorage.getItem(key) === '1'; } catch (e) {}
     if (seen) open(true);
   });
+})();
+
+/* ---------- mini movie player ---------- */
+(function moviePlayer() {
+  const box = document.getElementById('movie'), frame = document.getElementById('movie-frame');
+  const alt = document.getElementById('movie-alt'), closeBtn = document.getElementById('movie-close');
+  let resumeMusic = false, opener = null;
+  function open(a) {
+    opener = a;
+    document.getElementById('movie-label').textContent = a.dataset.title || 'mini movie';
+    frame.src = `https://drive.google.com/file/d/${a.dataset.drive}/preview`;
+    alt.href = a.href;
+    resumeMusic = musicOn();
+    if (resumeMusic) pauseSong();
+    box.hidden = false;
+    document.body.classList.add('locked');
+    requestAnimationFrame(() => box.classList.add('on'));
+    closeBtn.focus();
+  }
+  function close() {
+    frame.src = 'about:blank';   // stops the video
+    box.classList.remove('on');
+    document.body.classList.remove('locked');
+    setTimeout(() => { box.hidden = true; }, 600);
+    if (resumeMusic) playSong();
+    if (opener) opener.focus();
+  }
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[data-drive]');
+    if (!a) return;
+    e.preventDefault();
+    open(a);
+  });
+  closeBtn.addEventListener('click', close);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !box.hidden) close(); });
 })();
 
 /* ---------- reveal on scroll ---------- */
