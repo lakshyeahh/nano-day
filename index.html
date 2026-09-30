@@ -406,8 +406,12 @@ const KEEPSAKES = [
 // paste the Google Drive share link here (sharing must be "Anyone with the link")
 const comfortWeekMovieLink = 'https://drive.google.com/file/d/15_a9bqvYGK-9aCbOtqdnjB4LN9IJ2MMO/view?usp=sharing';
 
+// Wednesday's keynote: a PDF export in files/, or an iCloud Keynote share link
+const comfortWeekCreativeLink = 'https://www.icloud.com/keynote/0c0LmisXXmAKIImZdlCKMcdyg#Why_You_Feel_Like_Home_Comfort_Week';
+
 // links under a day in its week card; a Drive file link plays in an embedded player, anything else opens in a new tab
 const DAY_LINKS = [
+  { week: 0, dow: 3, label: 'open the creative piece ↗', href: comfortWeekCreativeLink },
   { week: 0, dow: 0, label: 'watch the mini movie ▶', href: comfortWeekMovieLink, title: 'comfort week · the mini movie' },
 ];
 const driveId = url => (url.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:export=\w+&)?id=)([\w-]+)/) || [])[1];
