@@ -625,7 +625,7 @@ document.getElementById('weeks-grid').innerHTML = WEEKS.map(w => {
   const plan = w.plan.map(p => {
     const cls = same(p.date, T) ? 'is-today' : (p.date < T ? 'done' : '');
     return `<li class="${cls}"><span class="ico" data-k="${p.r.k}">${p.r.icon}</span>
-      <div><p class="d">${p.r.day}</p><p class="w">${p.r.what}</p>${(k => k ? `<a class="ks-link" href="#ks-${k.id}">open it ↗</a>` : '')(KEEPSAKES.find(k => k.week === w.i && k.dow === p.r.dow && p.date <= T))}${p.date <= T ? DAY_LINKS.filter(l => l.week === w.i && l.dow === p.r.dow).filter(l => l.href).map(l => driveId(l.href)
+      <div><p class="d">${p.r.day}</p><p class="w">${p.r.what}</p>${(k => k ? `<a class="ks-link" href="#ks-${k.id}">open it ↗</a>` : '')(KEEPSAKES.find(k => k.week === w.i && k.dow === p.r.dow && same(p.date, T)))}${p.date <= T ? DAY_LINKS.filter(l => l.week === w.i && l.dow === p.r.dow).filter(l => l.href).map(l => driveId(l.href)
       ? `<a class="ks-link" href="${l.href}" target="_blank" rel="noopener" data-drive="${driveId(l.href)}" data-title="${l.title || ''}">${l.label}</a>`
       : `<a class="ks-link" href="${l.href}" target="_blank" rel="noopener">${l.label}</a>`).join(' ') : ''}</div>
       <span class="dt">${same(p.date, T) ? 'Today' : fmt(p.date)}</span></li>`;
@@ -690,9 +690,22 @@ setInterval(() => {
   const host = document.getElementById('keepsakes');
   const ready = KEEPSAKES
     .map(k => ({ ...k, w: WEEKS[k.week], date: WEEKS[k.week].days.find(d => d.date.getDay() === k.dow).date }))
-    .filter(k => k.date <= T)
+    .filter(k => same(k.date, T))
     .sort((a, b) => b.date - a.date);
-  if (!ready.length) return;
+  if (!ready.length) {
+    const wk = current || WEEKS[0];
+    if (T < START || T > BDAY) return;
+    host.hidden = false;
+    host.innerHTML = `
+    <article class="ks" style="--accent:${wk.accent};--tint:${wk.tint}">
+      <p class="eyebrow ks-label reveal">${wk.name.toLowerCase()} · ${wd(T, 'long').toLowerCase()}</p>
+      <div class="ks-stage reveal"><div class="ks-env">
+        <div class="env" aria-hidden="true"><i class="body"></i><i class="fold"></i><i class="flap"></i><i class="seal">🌷</i></div>
+        <p class="ks-prompt">still sealed. the next one opens soon.</p>
+      </div></div>
+    </article>`;
+    return;
+  }
   host.hidden = false;
   host.innerHTML = ready.map(k => `
     <article class="ks" id="ks-${k.id}" style="--accent:${k.w.accent};--tint:${k.w.tint}" aria-labelledby="ks-${k.id}-t">
