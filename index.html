@@ -405,6 +405,7 @@ const KEEPSAKES = [
 
 // paste the Google Drive share link here (sharing must be "Anyone with the link")
 const comfortWeekMovieLink = 'https://drive.google.com/file/d/15_a9bqvYGK-9aCbOtqdnjB4LN9IJ2MMO/view?usp=sharing';
+const prettyWeekMovieLink = 'https://drive.google.com/file/d/18Tqn21ogoIcD2sscjTgelIHvdyzABEtw/view?usp=sharing';
 
 // Wednesday's keynote: a PDF export in files/, or an iCloud Keynote share link
 const comfortWeekCreativeLink = 'https://www.icloud.com/keynote/0c0LmisXXmAKIImZdlCKMcdyg#Why_You_Feel_Like_Home_Comfort_Week';
@@ -413,6 +414,7 @@ const comfortWeekCreativeLink = 'https://www.icloud.com/keynote/0c0LmisXXmAKIImZ
 const DAY_LINKS = [
   { week: 0, dow: 3, label: 'open the creative piece ↗', href: comfortWeekCreativeLink },
   { week: 0, dow: 0, label: 'watch the mini movie ▶', href: comfortWeekMovieLink, title: 'comfort week · the mini movie' },
+  { week: 1, dow: 0, label: 'watch the mini movie ▶', href: prettyWeekMovieLink, title: 'pretty week · the mini movie' },
 ];
 const driveId = url => (url.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:export=\w+&)?id=)([\w-]+)/) || [])[1];
 
@@ -625,7 +627,7 @@ document.getElementById('weeks-grid').innerHTML = WEEKS.map(w => {
   const plan = w.plan.map(p => {
     const cls = same(p.date, T) ? 'is-today' : (p.date < T ? 'done' : '');
     return `<li class="${cls}"><span class="ico" data-k="${p.r.k}">${p.r.icon}</span>
-      <div><p class="d">${p.r.day}</p><p class="w">${p.r.what}</p>${(k => k ? `<a class="ks-link" href="#ks-${k.id}">open it ↗</a>` : '')(KEEPSAKES.find(k => k.week === w.i && k.dow === p.r.dow && same(p.date, T)))}${p.date <= T ? DAY_LINKS.filter(l => l.week === w.i && l.dow === p.r.dow).filter(l => l.href).map(l => driveId(l.href)
+      <div><p class="d">${p.r.day}</p><p class="w">${p.r.what}</p>${(k => k ? `<a class="ks-link" href="#ks-${k.id}">open it ↗</a>` : '')(KEEPSAKES.find(k => k.week === w.i && k.dow === p.r.dow && p.date <= T))}${p.date <= T ? DAY_LINKS.filter(l => l.week === w.i && l.dow === p.r.dow).filter(l => l.href).map(l => driveId(l.href)
       ? `<a class="ks-link" href="${l.href}" target="_blank" rel="noopener" data-drive="${driveId(l.href)}" data-title="${l.title || ''}">${l.label}</a>`
       : `<a class="ks-link" href="${l.href}" target="_blank" rel="noopener">${l.label}</a>`).join(' ') : ''}</div>
       <span class="dt">${same(p.date, T) ? 'Today' : fmt(p.date)}</span></li>`;
@@ -690,13 +692,11 @@ setInterval(() => {
   const host = document.getElementById('keepsakes');
   const ready = KEEPSAKES
     .map(k => ({ ...k, w: WEEKS[k.week], date: WEEKS[k.week].days.find(d => d.date.getDay() === k.dow).date }))
-    .filter(k => same(k.date, T))
+    .filter(k => k.date <= T)
     .sort((a, b) => b.date - a.date);
-  if (!ready.length) {
-    const wk = current || WEEKS[0];
-    if (T < START || T > BDAY) return;
-    host.hidden = false;
-    host.innerHTML = `
+  if (!ready.length && (T < START || T > BDAY)) return;
+  const wk = current || WEEKS[0];
+  const sealed = ready.some(k => same(k.date, T)) || T < START || T > BDAY ? '' : `
     <article class="ks" style="--accent:${wk.accent};--tint:${wk.tint}">
       <p class="eyebrow ks-label reveal">${wk.name.toLowerCase()} · ${wd(T, 'long').toLowerCase()}</p>
       <div class="ks-stage reveal"><div class="ks-env">
@@ -704,11 +704,9 @@ setInterval(() => {
         <p class="ks-prompt">still sealed. the next one opens soon.</p>
       </div></div>
     </article>`;
-    return;
-  }
   host.hidden = false;
-  host.innerHTML = ready.map(k => `
-    <article class="ks" id="ks-${k.id}" style="--accent:${k.w.accent};--tint:${k.w.tint}" aria-labelledby="ks-${k.id}-t">
+  host.innerHTML = sealed + ready.map(k => `
+    <article class="ks" id="ks-${k.id}" ${same(k.date, T) ? '' : 'hidden'} style="--accent:${k.w.accent};--tint:${k.w.tint}" aria-labelledby="ks-${k.id}-t">
       <p class="eyebrow ks-label reveal">${k.label} · ${fmt(k.date)}</p>
       <h2 class="reveal" id="ks-${k.id}-t">${k.title[0]}<em>${k.title[1]}</em></h2>
       <p class="ks-sub reveal">${k.sub}</p>
@@ -731,7 +729,7 @@ setInterval(() => {
       <div class="ks-after"><p>${k.after}</p><small>${k.sign}</small></div>
     </article>`).join('');
 
-  host.querySelectorAll('.ks').forEach(card => {
+  host.querySelectorAll('.ks[id]').forEach(card => {
     const key = 'nanoOpened:' + card.id;
     const paper = card.querySelector('.ks-paper');
     paper.querySelectorAll('img').forEach(img => img.addEventListener('error', () => {
@@ -758,6 +756,16 @@ setInterval(() => {
     if (seen) open(true);
   });
 })();
+
+document.addEventListener('click', e => {
+  const a = e.target.closest('a.ks-link[href^="#ks-"]');
+  const card = a && document.querySelector(a.getAttribute('href'));
+  if (!card) return;
+  e.preventDefault();
+  card.hidden = false;
+  card.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+  requestAnimationFrame(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+});
 
 /* ---------- mini movie player ---------- */
 (function moviePlayer() {
