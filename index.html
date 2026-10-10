@@ -385,6 +385,7 @@ const WEEKS = [
 /* ---------- keepsakes: one entry per thing you give her ----------
    Each shows up on its date as a sealed letter she opens, newest first,
    and its day in the week card links to it. Add the next one below. */
+const prettyWeekNoteImages = ['images/pretty-week-note-1.jpg'];
 const handwrittenNoteImages = ['images/comfort-week-note-1.jpg', 'images/comfort-week-note-2.jpg'];
 
 const KEEPSAKES = [
@@ -400,6 +401,19 @@ const KEEPSAKES = [
           'Page two of the handwritten letter, with a cut-out polka-dot paper heart, ending with a signature.'],
     after: 'some things are better handwritten.',
     sign: 'happy comfort week, nano 🤍',
+  },
+  {
+    id: 'pretty-monday',
+    week: 1, dow: 1,
+    showOn: D(10, 10),   // it went out late, so it also sits up front on this day
+    label: 'pretty week · monday',
+    title: ['Monday —', 'a little late, but for you'],
+    sub: 'sorry yaar, ye thoda late pahuncha 🙈 par jo likha hai na, wo poora monday ka hi hai.',
+    prompt: 'der se aaya, par dil se aaya.',
+    images: prettyWeekNoteImages,
+    alt: ['A handwritten letter starting “my pretty girl,” on paper with burnt edges, decorated with a pink ribbon cut-out, a crochet flower and a strip of paper hearts, signed “always, me”.'],
+    after: 'pretty is just one of the things you are.',
+    sign: 'happy pretty week, nano 🤍',
   },
 ];
 
@@ -696,7 +710,8 @@ setInterval(() => {
     .sort((a, b) => b.date - a.date);
   if (!ready.length && (T < START || T > BDAY)) return;
   const wk = current || WEEKS[0];
-  const sealed = ready.some(k => same(k.date, T)) || T < START || T > BDAY ? '' : `
+  const upFront = k => same(k.date, T) || (k.showOn && same(k.showOn, T));
+  const sealed = ready.some(upFront) || T < START || T > BDAY ? '' : `
     <article class="ks" style="--accent:${wk.accent};--tint:${wk.tint}">
       <p class="eyebrow ks-label reveal">${wk.name.toLowerCase()} · ${wd(T, 'long').toLowerCase()}</p>
       <div class="ks-stage reveal"><div class="ks-env">
@@ -706,7 +721,7 @@ setInterval(() => {
     </article>`;
   host.hidden = false;
   host.innerHTML = sealed + ready.map(k => `
-    <article class="ks" id="ks-${k.id}" ${same(k.date, T) ? '' : 'hidden'} style="--accent:${k.w.accent};--tint:${k.w.tint}" aria-labelledby="ks-${k.id}-t">
+    <article class="ks" id="ks-${k.id}" ${upFront(k) ? '' : 'hidden'} style="--accent:${k.w.accent};--tint:${k.w.tint}" aria-labelledby="ks-${k.id}-t">
       <p class="eyebrow ks-label reveal">${k.label} · ${fmt(k.date)}</p>
       <h2 class="reveal" id="ks-${k.id}-t">${k.title[0]}<em>${k.title[1]}</em></h2>
       <p class="ks-sub reveal">${k.sub}</p>
