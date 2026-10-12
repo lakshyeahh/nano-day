@@ -385,6 +385,7 @@ const WEEKS = [
 /* ---------- keepsakes: one entry per thing you give her ----------
    Each shows up on its date as a sealed letter she opens, newest first,
    and its day in the week card links to it. Add the next one below. */
+const brainWeekNoteImages = ['images/brain-week-note-1.jpg', 'images/brain-week-note-2.jpg'];
 const prettyWeekNoteImages = ['images/pretty-week-note-1.jpg'];
 const handwrittenNoteImages = ['images/comfort-week-note-1.jpg', 'images/comfort-week-note-2.jpg'];
 
@@ -414,6 +415,19 @@ const KEEPSAKES = [
     alt: ['A handwritten letter starting “my pretty girl,” on paper with burnt edges, decorated with a pink ribbon cut-out, a crochet flower and a strip of paper hearts, signed “always, me”.'],
     after: 'pretty is just one of the things you are.',
     sign: 'happy pretty week, nano 🤍',
+  },
+  {
+    id: 'brain-monday',
+    week: 2, dow: 1,
+    label: 'brain week · monday',
+    title: ['Monday —', 'for my favourite mind'],
+    sub: 'a few things about that brain of yours, written down so you can’t argue with them.',
+    prompt: 'jo likha hai, dhyaan se padhna.',
+    images: brainWeekNoteImages,
+    alt: ['Page one of a handwritten note with pink cut-out letters spelling “HAPPY BRAIN WEEK”, “meri nano” in black marker, green paper balloons and an orange star labelled “my star”.',
+          'Page two of the handwritten note, framed by green and pink checkered tape, with paper balloons at the top, signed “your full time english corrector”.'],
+    after: 'duffer bhi, smart bhi. poori ki poori meri.',
+    sign: 'happy brain week, nano 🤍',
   },
 ];
 
