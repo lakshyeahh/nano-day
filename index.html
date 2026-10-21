@@ -385,6 +385,7 @@ const WEEKS = [
 /* ---------- keepsakes: one entry per thing you give her ----------
    Each shows up on its date as a sealed letter she opens, newest first,
    and its day in the week card links to it. Add the next one below. */
+const loveWeekNoteImages = ['images/love-week-note-1.jpg', 'images/love-week-note-2.jpg'];
 const brainWeekNoteImages = ['images/brain-week-note-1.jpg', 'images/brain-week-note-2.jpg'];
 const prettyWeekNoteImages = ['images/pretty-week-note-1.jpg'];
 const handwrittenNoteImages = ['images/comfort-week-note-1.jpg', 'images/comfort-week-note-2.jpg'];
@@ -428,6 +429,20 @@ const KEEPSAKES = [
           'Page two of the handwritten note, framed by green and pink checkered tape, with paper balloons at the top, signed “your full time english corrector”.'],
     after: 'duffer bhi, smart bhi. poori ki poori meri.',
     sign: 'happy brain week, nano 🤍',
+  },
+  {
+    id: 'love-monday',
+    week: 3, dow: 1,
+    showOn: D(10, 22),   // it went out late, so it also sits up front on this day
+    label: 'love week · monday',
+    title: ['Monday —', 'your receipt, ma’am'],
+    sub: 'the last note of your birthday month. no returns, no exchanges.',
+    prompt: 'one small receipt, for everything so far.',
+    images: loveWeekNoteImages,
+    alt: ['A handwritten receipt titled “Lakshya’s General Store”, with zigzag torn edges and pink highlighter, listing late-night calls and “thinking about you” for zero rupees, paid with “your smile”.',
+          'Page two of the receipt: a return policy of no returns and no exchanges, then a P.S. to “buba” about the last note of her birthday month, ending “see you on 26th, bday girl”, signed.'],
+    after: 'all four weeks done. one day left that matters.',
+    sign: 'happy love week, nano 🤍',
   },
 ];
 
